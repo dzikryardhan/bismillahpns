@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bismillah PNS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday study companion, calm but committed
+   IDEA the CAT BKN answer sheet + merah putih: a daily lembar belajar you fill in
+   PICTURE three readiness gauges (TWK, TIU, TKP) against the passing-grade line, plus a 4-week streak grid
+   COLOUR white ground, merah #c8102e dominant band, ink #15171c; subtests red / blue #1d4ed8 / teal #0f766e
+   TYPE Plus Jakarta Sans 800 titles + Plus Jakarta Sans text
+   LAYOUT red band with title + gauges; tabs below; phone: bottom nav, stacked */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#111216);--ink:light-dark(#15171c,#eef0f4);--mut:light-dark(#5b6170,#a3a9b6);--line:light-dark(#e3e5ea,#2a2d35);--card:light-dark(#f6f7f9,#1a1c22);--red:#c8102e;--redd:light-dark(#c8102e,#9d0c24);--twk:light-dark(#c8102e,#ff5a6e);--tiu:light-dark(#1d4ed8,#6b8cff);--tkp:light-dark(#0f766e,#2dd4bf);--ok:light-dark(#0f766e,#2dd4bf);--bad:light-dark(#b42318,#ff7b6e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Plus Jakarta Sans",system-ui,sans-serif;overflow-x:clip;padding-bottom:84px}
+a{color:inherit}
+h1,h2,h3{line-height:1.08;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800}
+h2{font-size:clamp(22px,3vw,28px);font-weight:800;margin-bottom:12px}
+h3{font-size:18px;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto;padding:0 max(4vw,16px)}
+.hero{background:var(--redd);color:#fff;padding:22px 0 26px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:end}
+.hero p{margin:8px 0 0;color:#ffe3e7}
+.cd{display:flex;gap:18px;margin-top:16px;flex-wrap:wrap}
+.cd b{display:block;font-size:30px;font-weight:800;line-height:1}
+.cd span{font-size:13px;color:#ffd5db}
+.gauges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.g{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:12px}
+.g .top{display:flex;justify-content:space-between;font-weight:700}
+.tube{position:relative;height:120px;margin:10px 0 6px;background:rgba(0,0,0,.18);border-radius:10px;overflow:hidden}
+.tube i{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:10px 10px 0 0;transition:height .6s}
+.tube em{position:absolute;left:0;right:0;border-top:2px dashed #ffd400;font-style:normal;font-size:12px;color:#ffd400;padding-left:6px}
+.g small{font-size:13px;color:#ffd5db}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.tabs a{flex:none;padding:14px 14px;text-decoration:none;font-weight:600;color:var(--mut);border-bottom:3px solid transparent}
+nav.tabs a.on{color:var(--ink);border-color:var(--red)}
+main{padding:24px 0 40px}
+section.view{display:none}section.view.on{display:block}
+.grid2{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.task{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.task:first-of-type{border-top:0}
+.chk{appearance:none;flex:none;width:28px;height:28px;border:2px solid var(--mut);border-radius:8px;margin:2px 0 0;cursor:pointer;display:grid;place-items:center}
+.chk:checked{background:var(--red);border-color:var(--red)}
+.chk:checked::after{content:"";width:8px;height:14px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.chk:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--tiu);outline-offset:2px}
+.task .t{font-weight:600}.task .d{font-size:14px;color:var(--mut)}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:2px 9px;border-radius:99px;color:#fff;white-space:nowrap}
+.tag.twk{background:var(--twk)}.tag.tiu{background:var(--tiu)}.tag.tkp{background:var(--tkp)}.tag.all{background:var(--ink);color:var(--bg)}
+button,.btn{font:inherit;font-weight:700;min-height:44px;padding:0 18px;border-radius:12px;border:2px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button.ghost,.btn.ghost{background:transparent;color:var(--ink)}
+button.red{background:var(--red);border-color:var(--red);color:#fff}
+button:disabled{opacity:.45;cursor:default}
+input,select{font:inherit;font-size:16px;min-height:44px;padding:0 12px;border:1px solid var(--mut);border-radius:10px;background:var(--bg);color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.banner{background:#fff4c2;color:#3d2e00;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-weight:600}
+.banner.done{background:color-mix(in srgb,var(--ok) 18%,var(--bg));color:var(--ink)}
+.streak{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:10px}
+.streak i{aspect-ratio:1;border-radius:5px;background:var(--line)}
+.streak i.on{background:var(--red)}.streak i.today{outline:2px solid var(--ink)}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(8em,1fr));gap:12px;margin:14px 0}
+.stat div{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font-size:26px;font-weight:800;line-height:1.1}
+.stat span{font-size:13px;color:var(--mut)}
+.week{display:grid;gap:10px}
+.day{display:grid;grid-template-columns:7.5em minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:14px}
+.day.today{border:2px solid var(--red)}
+.day .dt{font-weight:800;font-size:20px;line-height:1.1}.day .dt small{display:block;font-size:13px;font-weight:600;color:var(--mut)}
+.prog{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:6px}.prog i{display:block;height:100%;background:var(--red)}
+.files{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.file{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.file a{font-weight:600;overflow-wrap:anywhere}
+details{border:1px solid var(--line);border-radius:14px;padding:4px 16px;margin-bottom:10px;background:var(--card)}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;gap:8px}
+details ul{padding-left:20px;margin:6px 0 14px}details li{margin:4px 0}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px}
+.mode{border:2px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.mode p{margin:0;color:var(--mut);font-size:14px;flex:1}
+.cat{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:20px}
+.qbox{border:1px solid var(--line);border-radius:16px;padding:20px}
+.qhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.timer{font-weight:800;font-variant-numeric:tabular-nums;font-size:20px}
+.qtext{font-size:18px;font-weight:600;margin-bottom:14px;white-space:pre-line}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);font-weight:500;margin-bottom:8px;padding:10px 14px;min-height:48px}
+.opt b{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--mut);display:grid;place-items:center;font-size:14px}
+.opt.sel{border:2px solid var(--tiu)}.opt.sel b{background:var(--tiu);color:#fff;border-color:var(--tiu)}
+.nums{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.nums button{min-height:40px;padding:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:14px;border-radius:8px;justify-content:center}
+.nums button.ans{background:var(--tiu);border-color:var(--tiu);color:#fff}.nums button.cur{outline:2px solid var(--red)}
+.bars .br{display:grid;grid-template-columns:4em minmax(0,1fr) 7em;gap:10px;align-items:center;margin:10px 0}
+.bars .tr{position:relative;height:22px;background:var(--line);border-radius:6px}
+.bars .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
+.bars .tr em{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed var(--ink)}
+.bars .v{text-align:right;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rev{border-top:1px solid var(--line);padding:12px 0}
+.rev .ok{color:var(--ok);font-weight:700}.rev .no{color:var(--bad);font-weight:700}
+.fig{position:relative;height:240px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+svg text{font:13px "Plus Jakarta Sans",sans-serif;fill:var(--mut)}
+.vid{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.vid .links{display:flex;gap:12px;flex-wrap:wrap;font-size:14px;margin-top:2px}
+.muted{color:var(--mut);font-size:14px}
+.heat{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-auto-flow:column;grid-template-rows:repeat(7,auto);gap:4px;max-width:320px}
+.heat i{aspect-ratio:1;border-radius:4px;background:var(--line)}.heat i.on{background:var(--red)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none}.toast.on{opacity:1}
+@media(max-width:860px){.hero .wrap,.grid2,.cat{grid-template-columns:minmax(0,1fr)}.cat .side{order:-1}}
+@media(max-width:600px){.day{grid-template-columns:5.5em minmax(0,1fr)}.day .act{grid-column:1/-1}.tube{height:90px}.g{padding:10px}.cd b{font-size:24px}nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;border-top:1px solid var(--line);border-bottom:0}nav.tabs a{padding:12px 10px;font-size:14px;border-bottom:0;border-top:3px solid transparent}nav.tabs a.on{border-color:var(--red)}.bars .br{grid-template-columns:3em minmax(0,1fr) 6.5em}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero">
+ <div class="wrap">
+  <div>
+   <h1>Bismillah PNS</h1>
+   <p>Platform belajar SKD harian: jadwal, materi dari Drive, try out, dan video.</p>
+   <div class="cd" id="cd"></div>
+  </div>
+  <div>
+   <div class="gauges" id="gauges"></div>
+  </div>
+ </div>
+</header>
+<nav class="tabs"><div class="wrap" id="tabs">
+ <a href="#hari-ini">Hari ini</a><a href="#jadwal">Jadwal</a><a href="#materi">Materi</a><a href="#tryout">Try out</a><a href="#video">Video</a><a href="#progres">Progres</a>
+</div></nav>
+<main class="wrap">
+<section class="view" id="v-hari-ini">
+ <div id="banner"></div>
+ <div class="grid2">
+  <div class="panel"><h2 id="todayTitle">Hari ini</h2><div id="todayTasks"></div></div>
+  <div class="panel">
+   <h3>Konsistensi 4 minggu</h3>
+   <div class="streak" id="streak"></div>
+   <div class="stat" id="quick"></div>
+   <h3 style="margin-top:8px">Pengaturan</h3>
+   <div class="row" style="margin-top:8px">
+    <label for="exam">Tanggal ujian SKD</label><input type="date" id="exam">
+   </div>
+   <div class="row" style="margin-top:8px">
+    <label for="rtime">Jam belajar harian</label><input type="time" id="rtime">
+   </div>
+   <p class="muted" id="syncNote">Menyimpan progres…</p>
+  </div>
+ </div>
+</section>
+
+<section class="view" id="v-jadwal">
+ <h2>Jadwal mingguan</h2>
+ <p class="muted">Pola 7 hari berulang: TWK 2×, TIU 3×, TKP 1×, dan try out tiap Minggu. File materi berganti tiap minggu.</p>
+ <div class="row" style="margin:12px 0"><button class="ghost" id="wkPrev">‹ Minggu lalu</button><b id="wkLabel"></b><button class="ghost" id="wkNext">Minggu depan ›</button></div>
+ <div class="week" id="week"></div>
+</section>
+
+<section class="view" id="v-materi">
+ <h2>Materi dari Google Drive</h2>
+ <p class="muted">Tandai file yang sudah dibaca. Link membuka file di Drive Anda.</p>
+ <div class="files" id="files"></div>
+ <h2 style="margin-top:28px">Rangkuman</h2>
+ <div id="sum"></div>
+</section>
+
+<section class="view" id="v-tryout">
+ <div id="toHome">
+  <h2>Try out</h2>
+  <p class="muted">Soal TIU dan TWK diambil dari file Drive Anda. Soal TKP disusun mengikuti pola SKD karena file yang terbaca belum memuat soal TKP. Skor diproyeksikan ke skala SKD asli: TWK 150, TIU 175, TKP 225.</p>
+  <div class="modes" id="modes"></div>
+ </div>
+ <div id="toRun" hidden></div>
+ <div id="toRes" hidden></div>
+</section>
+
+<section class="view" id="v-video">
+ <h2>Daftar tonton</h2>
+ <p class="muted">Tiap topik punya link pencarian ke video Al Faiz dan Sang Tutor di YouTube. Tambahkan video pilihan Anda sendiri di bawah.</p>
+ <div id="vids"></div>
+ <div class="panel" style="margin-top:16px">
+  <h3>Tambah video</h3>
+  <div class="row" style="margin-top:10px">
+   <input id="vT" placeholder="Judul video" style="flex:2 1 200px">
+   <input id="vU" placeholder="Link YouTube" style="flex:2 1 200px">
+   <select id="vC"><option value="twk">TWK</option><option value="tiu">TIU</option><option value="tkp">TKP</option></select>
+   <button id="vAdd">Tambah</button>
+  </div>
+ </div>
+</section>
+
+<section class="view" id="v-progres">
+ <h2>Sejauh mana belajar SKD</h2>
+ <div class="stat" id="pStats"></div>
+ <div class="grid2">
+  <div class="panel"><h3>Riwayat try out (proyeksi total, maks 550)</h3><div class="fig"><svg id="hist"></svg></div><div class="scroll"><table id="histT"></table></div></div>
+  <div class="panel"><h3>Cakupan per subtes</h3><div class="bars" id="cover"></div><h3 style="margin-top:16px">Hari belajar, 8 minggu</h3><div class="heat" id="heat" style="margin-top:8px"></div></div>
+ </div>
+</section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+{
+/* ---------- data ---------- */
+const PG={twk:65,tiu:80,tkp:166},MAX={twk:150,tiu:175,tkp:225},NAME={twk:'TWK',tiu:'TIU',tkp:'TKP'};
+const D=id=>'https://drive.google.com/file/d/'+id+'/view';
+const F='https://drive.google.com/drive/folders/';
+const FILES=[
+ {g:'TWK',c:'twk',items:[['1_gVHtiLUlEoTA-zJfbWVere2mFSyJqJG','Rangkuman Tes Wawasan Kebangsaan'],['1cATH7NQW2kXvL5wJ9lTEnUEvlNo3tZKr','Sosialisasi 4 Pilar Berbangsa dan Bernegara'],['1souoBGb8HiL__28K9uPr1FQlIBR7SQSl','Modul 10 Nasionalisme']]},
+ {g:'TIU',c:'tiu',items:[['1liBIISNbiIqW3S4V0zOsCPobM2kQDyoG','Handbook TIU Seri 1: Verbal'],['11yeJqBsYKjPXEaQLX9wgrYKbiHEeQwpN','Handbook TIU Seri 2: Numerik'],['1rU7HJdyYa5upXw2sUpi_yiGhfBfy7x5W','Handbook TIU Seri 3: Figural'],['1SGlgCaunMKxcnUps9JjzGiTgvSek-AsO','Materi TIU #2 Kemampuan Numerik'],['1-2dZrpFwcrE-hLKAeQrqFKdlkGJs7TDI','Modul Harian TIU #7 Kecukupan Data'],['1Ad6VZ4AVf9Q2Qs2DLCqqti3GoUvR4jdE','Soal TIU 2023-2024'],['1HipgFzNqOQEz9Un8cX1pUGyfPD7eongC','CPNS 2023-2024 (logika aritmetika)']]},
+ {g:'SKD lengkap (TWK, TIU, TKP)',c:'tkp',items:[['1O6RuwbSpWY1HPmcygAmfqwfPHo1MvJ5I','Kitab Mini SKD CASN 2024'],['1ZkXsoddsTl9OqpGolt7-pkMsPsXymfVH','Sang Tutor SKD CPNS & Kedinasan 2024-2025'],['18BJrXGPWvn-B-Chts_zzGORkRz-SXsa3','SKD HOTS Al Faiz 2024 (scanbook, 106 MB)'],['1yRAxdRDHJbHpjn-fiTobFLoE5IzDJZNF','Peringkat 1 SKD CPNS 2023-2024'],['1S7LBM9KaM0a-pPV_xF0telnCh992avXG','Sukses CPNS 2026/2027']]},
+ {g:'Bank soal',c:'all',items:[['1zx_Jv4oLcMvfgFpSd9uNhCxNQMzGUqpA','Soal SKD dan Jawaban 2020-2021'],['15pi1DN9Tj0MUqeWSPdeT1NOR6OgiMtlY','Lengkap SKD 2020'],['1RrXBr5kWvNUXs5ypYBZkTBF-3gA2oh6S','Drilling Soal-soal CPNS'],['17h7whym9-irAX6gVTwRrrZgJv53jvnGs','Soal CPNS + pembahasan'],['1k88Og3Vn1nRZhwXCqMxVjxMHHrmf82rB','Panduan Tes CPNS 2024']]}
+];
+const FOLDERS=[['1Ztc3_ov_c9tFWMUl_-4jCdlkyjLFIp9B','Persiapan CPNS (folder Anda)'],['1657f6qK9Zaelu1yl0sbZC2y3uUhrVodn','1. Tes Intelegensi Umum'],['1AdU2SNSfTNBYkFMM-lCVfbwly7ZPLv_r','TIU: Latihan Soal (updated)'],['11tmnyupn3UE0eadxMHzdML0TIA6I67MZ','Simulasi & TryOut CPNS 2026'],['1pkblaLxPwJg8QQ2aRvmv_-0B0hniNCPP','E-Book CPNS 2026'],['1TC5MktM6OwiNQmcTXkUXdUrK78F_QZUH','CPNS (folder modul)'],['1itq1qh1PomkPjqnWi09Az7ptHyIK3G_q','SUKSES CPNS 2026']];
+const fileById=Object.fromEntries(FILES.flatMap(g=>g.items.map(([id,t])=>[id,t])));
+
+const PLAN=[
+ {c:'twk',t:'Pancasila & UUD 1945',files:['1_gVHtiLUlEoTA-zJfbWVere2mFSyJqJG','1cATH7NQW2kXvL5wJ9lTEnUEvlNo3tZKr'],v:'twk-pancasila'},
+ {c:'tiu',t:'Verbal: sinonim, antonim, analogi',files:['1liBIISNbiIqW3S4V0zOsCPobM2kQDyoG','1Ad6VZ4AVf9Q2Qs2DLCqqti3GoUvR4jdE'],v:'tiu-verbal'},
+ {c:'tkp',t:'TKP: pelayanan publik & profesionalisme',files:['1O6RuwbSpWY1HPmcygAmfqwfPHo1MvJ5I','1ZkXsoddsTl9OqpGolt7-pkMsPsXymfVH'],v:'tkp-pelayanan'},
+ {c:'tiu',t:'Numerik: deret, aritmetika, perbandingan',files:['11yeJqBsYKjPXEaQLX9wgrYKbiHEeQwpN','1SGlgCaunMKxcnUps9JjzGiTgvSek-AsO','1HipgFzNqOQEz9Un8cX1pUGyfPD7eongC'],v:'tiu-deret'},
+ {c:'twk',t:'Nasionalisme, bela negara & sejarah',files:['1souoBGb8HiL__28K9uPr1FQlIBR7SQSl','1_gVHtiLUlEoTA-zJfbWVere2mFSyJqJG'],v:'twk-nasionalisme'},
+ {c:'tiu',t:'Figural, silogisme & kecukupan data',files:['1rU7HJdyYa5upXw2sUpi_yiGhfBfy7x5W','1-2dZrpFwcrE-hLKAeQrqFKdlkGJs7TDI'],v:'tiu-figural'},
+ {c:'all',t:'Try out lengkap + evaluasi',files:['1zx_Jv4oLcMvfgFpSd9uNhCxNQMzGUqpA','15pi1DN9Tj0MUqeWSPdeT1NOR6OgiMtlY','1RrXBr5kWvNUXs5ypYBZkTBF-3gA2oh6S'],v:null}
+];
+
+const YT=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+const VIDS=[
+ ['twk-pancasila','twk','Pancasila sebagai dasar negara & ideologi','TWK pancasila'],
+ ['twk-uud','twk','UUD 1945: pasal penting & amandemen','TWK UUD 1945'],
+ ['twk-bti','twk','Bhinneka Tunggal Ika & NKRI','TWK bhinneka tunggal ika NKRI'],
+ ['twk-nasionalisme','twk','Nasionalisme & bela negara','TWK nasionalisme bela negara'],
+ ['twk-integritas','twk','Integritas','TWK integritas'],
+ ['twk-bahasa','twk','Bahasa Indonesia (PUEBI)','TWK bahasa indonesia'],
+ ['twk-sejarah','twk','Sejarah pergerakan nasional','TWK sejarah'],
+ ['tiu-verbal','tiu','Sinonim, antonim & analogi','TIU analogi sinonim'],
+ ['tiu-silogisme','tiu','Silogisme & penalaran logis','TIU silogisme'],
+ ['tiu-analitis','tiu','Penalaran analitis (posisi duduk, urutan)','TIU penalaran analitis'],
+ ['tiu-deret','tiu','Deret angka & huruf','TIU deret angka'],
+ ['tiu-hitung','tiu','Perbandingan, persen, kecepatan & soal cerita','TIU soal cerita aritmetika'],
+ ['tiu-figural','tiu','Figural: analogi, serial, ketidaksamaan gambar','TIU figural'],
+ ['tkp-pelayanan','tkp','Pelayanan publik','TKP pelayanan publik'],
+ ['tkp-jejaring','tkp','Jejaring kerja','TKP jejaring kerja'],
+ ['tkp-sosbud','tkp','Sosial budaya','TKP sosial budaya'],
+ ['tkp-tik','tkp','Teknologi informasi & komunikasi','TKP TIK'],
+ ['tkp-profesional','tkp','Profesionalisme','TKP profesionalisme'],
+ ['tkp-radikal','tkp','Anti radikalisme','TKP anti radikalisme']
+];
+
+const SUM=[
+ ['twk','TWK: Pancasila & dasar negara (dari file Rangkuman TWK)',[
+  'Pancasila dari bahasa Sanskerta: panca = lima, sila = dasar. Istilahnya ada di kitab Negarakertagama karya Empu Prapanca (Majapahit).',
+  'Usulan dasar negara di sidang BPUPKI: Moh. Yamin (29 Mei 1945), Soepomo (31 Mei 1945), Soekarno (1 Juni 1945, diperingati sebagai Hari Lahir Pancasila).',
+  'Piagam Jakarta (22 Juni 1945) disusun Panitia Sembilan yang diketuai Soekarno. Sila pertama diubah menjadi "Ketuhanan Yang Maha Esa" atas prakarsa Moh. Hatta.',
+  'Pancasila disahkan sebagai dasar negara oleh PPKI pada 18 Agustus 1945, dalam Pembukaan UUD 1945.',
+  'Pancasila sebagai sumber dari segala sumber hukum: TAP MPRS No. XX/MPRS/1966. Tata cara pengucapan resmi: Inpres No. 12 Tahun 1968.',
+  'Tiga nilai: dasar (sila-sila), instrumental (UU, kebijakan), praksis (pelaksanaan sehari-hari).',
+  'Ideologi terbuka (Dr. Alfian): dimensi realitas, idealisme, fleksibilitas.',
+  'Jika satu sila berdiri sendiri: sila 1 teokrasi, sila 2 kosmopolitanisme, sila 3 chauvinisme, sila 4 demokrasi liberal, sila 5 komunisme.',
+  'Garuda: 17 bulu sayap, 8 ekor, 19 pangkal ekor, 45 leher. Perancang: Sultan Hamid II.']],
+ ['twk','TWK: UUD 1945 & tata negara',[
+  'Amandemen: I 1999, II 2000, III 2001, IV 2002. Setelah amandemen: 20 bab, 73 pasal, 194 ayat.',
+  'Pokok pikiran Pembukaan: I persatuan (sila 3), II keadilan sosial (sila 5), III kedaulatan rakyat (sila 4), IV Ketuhanan & kemanusiaan (sila 1-2).',
+  'Pasal 7: masa jabatan presiden 5 tahun, dapat dipilih kembali satu kali. Pasal 7C: presiden tidak dapat membubarkan DPR.',
+  'Pasal 14: grasi & rehabilitasi dengan pertimbangan MA; amnesti & abolisi dengan pertimbangan DPR.',
+  'Pasal 22E: pemilu LUBER JURDIL tiap 5 tahun. Pasal 24C: 9 hakim MK (3 dari presiden, 3 DPR, 3 MA).',
+  'Pasal 31: anggaran pendidikan minimal 20% APBN dan APBD. Pasal 36A: lambang Garuda Pancasila, semboyan Bhinneka Tunggal Ika.',
+  'Pasal 37: usul perubahan UUD minimal 1/3 anggota MPR; bentuk NKRI tidak dapat diubah.',
+  'Otonomi daerah: desentralisasi (penyerahan urusan), dekonsentrasi (pelimpahan wewenang ke perangkat pusat di daerah), tugas pembantuan.']],
+ ['twk','TWK: Bhinneka Tunggal Ika & sejarah',[
+  'Bhinneka Tunggal Ika dari kitab Sutasoma karya Empu Tantular, lanjutannya "tan hana dharma mangrwa".',
+  'Kongres Pemuda II (27-28 Oktober 1928) diketuai Sugondo Djojopuspito; lahir Sumpah Pemuda dan Indonesia Raya karya W.R. Supratman diperdengarkan.',
+  'Sebelum Pancasila ada Ma-Lima (lima larangan) dan Tri Prakara (asas kebudayaan, religius, kenegaraan).']],
+ ['tiu','TIU: pola soal & trik (ringkasan Claude dari handbook TIU)',[
+  'Verbal: cari makna paling dekat, hati-hati dengan kata yang bunyinya mirip (abrasi ≠ aborsi). Analogi: rumuskan hubungannya dalam satu kalimat dulu, baru cek ke pilihan.',
+  'Deret: cek selisih, lalu selisih tingkat dua, lalu pola lompat (posisi ganjil dan genap terpisah). Untuk huruf, ubah ke angka A=1 … Z=26.',
+  'Soal cerita: tulis rumus inti (jarak = kecepatan × waktu, laba = jual − beli, rata-rata = jumlah ÷ banyak) sebelum menghitung.',
+  'Perbandingan x dan y: hitung keduanya terpisah. Jika ada variabel bebas tanpa batas, jawabannya sering "tidak dapat ditentukan".',
+  'TIU paling berat di SKD (ambang 80 dari 175). Jangan terpaku di satu soal; lewati soal hitungan panjang dan kembali di akhir.']],
+ ['tkp','TKP: cara menjawab (ringkasan Claude)',[
+  'Tiap pilihan bernilai 1 sampai 5, tidak ada jawaban 0 kecuali dikosongkan. Jangan pernah mengosongkan soal TKP.',
+  'Pilihan bernilai 5 biasanya: bertindak sendiri secara proaktif, sesuai aturan, mengutamakan kepentingan publik/organisasi, dan menyelesaikan masalah sampai tuntas.',
+  'Pilihan bernilai rendah: menghindar, menyerahkan ke orang lain tanpa alasan, emosional, atau melanggar prosedur.',
+  'Enam aspek: pelayanan publik, jejaring kerja, sosial budaya, teknologi informasi dan komunikasi, profesionalisme, anti radikalisme.',
+  'Ambang TKP 166 dari 225 berarti rata-rata sekitar 3,7 per soal. Target realistis: rata-rata 4.']]
+];
+
+/* question bank: s subtest, q, o options, a answer index (TWK/TIU), sc scores (TKP), src */
+const T='Soal TIU 2023-2024',C='CPNS 2023-2024 (logika aritmetika)',W='Rangkuman TWK',S='Soal CPNS + pembahasan',K='Pola soal SKD (disusun Claude)';
+const syn=(w,o,a)=>({s:'tiu',k:'Sinonim',q:'Sinonim dari '+w+' adalah …',o,a,src:T});
+const ana=(w,o,a)=>({s:'tiu',k:'Analogi',q:w,o,a,src:T});
+const num=(q,o,a,src=T,k='Numerik')=>({s:'tiu',k,q,o,a,src});
+const XY=['x > y','x < y','x = y','Hubungan x dan y tidak dapat ditentukan'];
+const BANK=[
+ syn('INTERIM',['Internal','Antarpribadi','Sementara','Selingan','Wawancara'],2),
+ syn('EJAWANTAH',['Reinkarnasi','Jelmaan','Karya cipta','Pengerjaan','Penjelasan'],1),
+ syn('DEMISIONER',['Calon gagal','Kartu mati','Pensiun','Habis masa jabatan','Mengemban misi'],3),
+ syn('FILE',['Lemari','Arsip','Rak','Kolom','Komputer'],1),
+ syn('EKLIPS',['Lonjong','Gerhana','Khatulistiwa','Penjepit','Radang'],1),
+ syn('FRAGMENTASI',['Peragian','Pemanisan','Penceramah','Pembabakan','Penyulingan'],3),
+ syn('GLOSARIUM',['Lampiran','Bagian penutup','Indeks','Intisari','Kamus ringkas'],4),
+ syn('BIOGRAFI',['Ilmu perpustakaan','Sumber bacaan','Daftar pustaka','Riwayat hidup','Acuan laporan'],3),
+ syn('BONAFIDE',['Dapat dipercaya','Surat berharga','Catatan','Jenis bonsai','Tegar'],0),
+ syn('AGUNAN',['Target','Menggunakan','Jaminan','Pagu','Andalan'],2),
+ syn('ELABORASI',['Kontrak kerja','Penjelasan terperinci','Penugasan kerja','Pendadaran','Penyusunan dalil'],1),
+ syn('EKUILIBRIUM',['Ekuivalensi','Keseragaman','Mata rantai','Kesamaan kebebasan','Keseimbangan'],4),
+ syn('FLEGMATIS',['Fleksibel','Berbau getah bening','Hipotesis','Bertemperamen lamban','Pragmatis'],3),
+ syn('ABRASI',['Elaborasi','Pembiasan','Pengikisan','Aborsi','Pengendapan'],2),
+ syn('DEHIDRASI',['Dekapitalisasi','Proses penyaringan','Deliberasi','Proses penyusutan','Kehilangan cairan tubuh'],4),
+ syn('DESKRIPSI',['Pembatalan skripsi','Pemahatan naskah','Pelukisan','Penanaman modal','Pemangkasan'],2),
+ syn('SEPARATIS',['Penyatuan','Peregangan','Pengacau','Sempalan','Pedoman'],3),
+ syn('OTOKRITIK',['Saling evaluasi','Koreksi konstruktif','Kejujuran','Kritikan pedas','Mawas diri'],4),
+ ana('INSENTIF : PRESTASI = …',['Penghormatan : kepribadian','Kebutuhan : pemenuhan','Hadiah : pengabdian','Hak : kewajiban','Motivasi : kinerja'],2),
+ ana('TANJUNG PERAK : SURABAYA = …',["O'Hare : Los Angeles",'Boombaru : Palembang','Sunda Kelapa : Bandung','Arun : Aceh','Papua : Tembagapura'],1),
+ ana('BAROMETER : TORRICELLI = …',['Elektron : Newton','Radar : Marconi','Penisilin : Fleming','Lampu pijar : Rontgen','Piala : Nobel'],2),
+ ana('PREMIS : KESIMPULAN = …',['Sebab : akibat','Alasan : tujuan','Prediktor : kriterion','Koreksi : salah','Argumen : persuasi'],0),
+ ana('TERATAI : KAKTUS = …',['Bunga : ranting','Lumpur : kapur','Air : pasir','Mawar : kamboja','Daun : duri'],2),
+ ana('EIFFEL : PERANCIS = Taj Mahal : …',['Kamboja','Pakistan','Thailand','India','Italia'],3),
+ ana('ES : AIR = air : …',['Mendidih','Membeku','Uap','Cair','Kabut'],2),
+ ana('PEREDARAN DARAH : WILLIAM HARVEY = kapal api : …',['Louis Pasteur','Alexander Fleming','Francis Galton','Robert Fulton','Gregor Mendel'],3),
+ ana('SASANDO : NUSA TENGGARA TIMUR = siter : …',['Jawa Tengah','Jawa Barat','Papua','Aceh','Kalimantan'],0),
+ ana('DIRGAHAYU : ULANG TAHUN = selamat berbahagia : …',['Mobil baru','Putra baru','Pernikahan','Kesembuhan','Promosi'],2),
+ num('10, 12, 14, 14, 18, …',['18','16','8','24','32'],1,T,'Deret'),
+ num('123, 345, 567, …',['232','834','190','789','678'],3,T,'Deret'),
+ num('12, 10, 14, 8, 18, 6, …',['18','12','26','25','28'],2,T,'Deret'),
+ num('70, 63, 56, 49, …',['41','32','30','36','42'],4,T,'Deret'),
+ num('1, 3, 7, 13, …',['21','33','11','12','20'],0,T,'Deret'),
+ num('9, 9, 9, 6, 9, 3, …',['6','3','9','−3','0'],2,T,'Deret'),
+ num('C B A P Q F E D R S …',['H','I','T','U','G'],1,T,'Deret'),
+ num('A N C P F S J …',['W','X','T','U','V'],0,T,'Deret'),
+ num('A K C … E O G',['M','N','O','P','F'],0,T,'Deret'),
+ num('Sumantri berjalan 2/5 km dalam 6 menit. Kecepatan rata-ratanya …',['4 km/jam','4,2 km/jam','4,5 km/jam','4,8 km/jam','5 km/jam'],0),
+ num('Mahasiswa sudah lulus 124 SKS dengan IPK 3,20. Semester ini ia mengambil 16 SKS. IP semester ini agar IPK menjadi 3,25 adalah …',['3,64','3,68','3,70','3,74','3,80'],0),
+ num('x = sisi bujur sangkar berluas 100; y = sisi panjang persegi panjang berluas 100 dengan sisi pendek 5. Nilai xy = …',['80','100','200','250','300'],2),
+ num('Tabung P tingginya dua kali tabung Q dan jari-jarinya setengah jari-jari Q. Perbandingan isi P : Q = …',['1 : 4','1 : 2','1 : 1','2 : 1','4 : 1'],1),
+ num('x = rusuk kubus bervolume 125 cm³; y = sisi miring segitiga siku-siku dengan sisi 3 cm dan 4 cm. Maka …',XY,2),
+ num('x = luas bujur sangkar bersisi 10 cm; y = luas lingkaran berdiameter 10 cm. Maka …',XY,0),
+ num('x = bilangan positif terkecil yang habis dibagi 14 dan 21; y = bilangan positif terkecil yang habis dibagi 14 dan 28. Maka …',XY,0),
+ num('x = selisih umur Tuti dan ayahnya sekarang; y = selisih umur keduanya 5 tahun lalu. Maka …',XY,2),
+ num('Harga y terletak di antara x dan z, dan x < z. Maka …',XY,1),
+ num('Bambang berangkat pukul 06.15 dan tiba pukul 09.45, istirahat makan 1 jam, kecepatan rata-rata 60 km/jam. Jarak A ke B …',['210 km','175 km','150 km','135 km','90 km'],2,C),
+ num('Bujur sangkar P berluas 64 dengan sisi x. Persegi panjang Q bersisi 4 dan y, luas P = Q. Maka …',['x > y','x < y','x = y','Tidak dapat ditentukan','x = 2y'],1,C),
+ num('Nilai empat mata pelajaran: 91, 88, 86, 78. Nilai pelajaran kelima agar rata-ratanya 85 adalah …',['86','85','84','82','80'],3,C),
+ num('x rupiah dibagi rata ke n orang, masing-masing Rp60.000. Jika satu orang lagi bergabung, masing-masing Rp50.000. Nilai x …',['Rp3.000.000','Rp2.500.000','Rp500.000','Rp300.000','Rp250.000'],3,C),
+ num('Barang dijual Rp80.000 dengan laba 25% dari harga beli. Harga belinya …',['Rp100.000','Rp96.000','Rp64.000','Rp80.000','Rp120.000'],2,C),
+ num('Upah Rp800/jam pukul 08.00–16.00, lewat pukul 16.00 tambahan 50% per jam. Jika hari itu dibayar Rp8.000, ia pulang pukul …',['16.20','16.40','17.00','17.10','17.20'],4,C),
+ num('Jam kerja dikurangi dari 40 menjadi 36 jam/minggu tanpa mengurangi gaji. Jika dulu Rp x/jam, sekarang per jam …',['40x','10x','x/10','9x/10','10x/9'],4,C),
+ num('Tembok setinggi 3 m sudah dicat 1/3. Setelah ditambah 10 m², menjadi 3/4 selesai. Panjang tembok …',['10 m','8 m','6 m','4 m','3 m'],1,C),
+ num('Dari titik x berjalan 1 km timur, 2 km utara, 1 km timur, 1 km utara, 1 km timur, 1 km utara sampai titik y. Jarak x ke y …',['12 km','9 km','7 km','5 km','4 km'],3,C),
+ num('Undangan untuk 50 wanita dan 70 pria. Hadir 40% wanita dan 50% pria. Kira-kira persentase yang hadir …',['90%','86%','48%','46%','40%'],3,C),
+ {s:'twk',q:'Jumlah bulu pada tiap sayap Garuda Pancasila adalah …',o:['8','17','19','45','5'],a:1,src:W},
+ {s:'twk',q:'Semboyan Bhinneka Tunggal Ika diambil dari kitab …',o:['Negarakertagama','Arjunawiwaha','Sutasoma','Pararaton','Bharatayudha'],a:2,src:W},
+ {s:'twk',q:'Istilah Pancasila terdapat dalam kitab Negarakertagama karya …',o:['Empu Tantular','Empu Prapanca','Empu Kanwa','Empu Sedah','Empu Panuluh'],a:1,src:W},
+ {s:'twk',q:'Tanggal 1 Juni diperingati sebagai Hari Lahir Pancasila karena pada hari itu …',o:['Piagam Jakarta ditandatangani','PPKI mengesahkan UUD 1945','Soekarno menyampaikan pidato dasar negara di BPUPKI','Proklamasi dibacakan','Moh. Yamin mengusulkan dasar negara'],a:2,src:W},
+ {s:'twk',q:'Pancasila disahkan secara formal sebagai dasar negara pada …',o:['1 Juni 1945','22 Juni 1945','17 Agustus 1945','18 Agustus 1945','29 Mei 1945'],a:3,src:S},
+ {s:'twk',q:'Rumusan Pancasila yang resmi terdapat dalam …',o:['Pidato Bung Karno','Teks Proklamasi','Pembukaan UUD 1945','Piagam Jakarta','Konstitusi RIS'],a:2,src:S},
+ {s:'twk',q:'Pancasila sebagai sumber dari segala sumber hukum ditetapkan dalam …',o:['TAP MPR No. II/MPR/1978','TAP MPRS No. XX/MPRS/1966','Inpres No. 12 Tahun 1968','TAP MPR No. V/MPR/1973','UU No. 12 Tahun 2011'],a:1,src:W},
+ {s:'twk',q:'Tata cara pengucapan Pancasila dalam upacara resmi diatur dalam …',o:['TAP MPR No. II/MPR/1978','Inpres No. 12 Tahun 1968','UU No. 5 Tahun 1985','TAP MPR No. I/MPR/1983','Keppres No. 1 Tahun 1945'],a:1,src:S},
+ {s:'twk',q:'Ketua Panitia Sembilan yang merumuskan Piagam Jakarta adalah …',o:['Moh. Hatta','Moh. Yamin','Soekarno','Soepomo','Achmad Soebardjo'],a:2,src:W},
+ {s:'twk',q:'Jika sila ketiga dilaksanakan tanpa dijiwai sila lainnya, dapat mengarah pada …',o:['Teokrasi','Kosmopolitanisme','Chauvinisme','Demokrasi liberal','Komunisme'],a:2,src:W},
+ {s:'twk',q:'Dimensi ideologi terbuka yang memberi harapan dan cita-cita masa depan yang lebih baik adalah dimensi …',o:['Realitas','Idealisme','Fleksibilitas','Normatif','Historis'],a:1,src:W},
+ {s:'twk',q:'Undang-undang dan kebijakan pemerintah yang menjabarkan nilai Pancasila termasuk nilai …',o:['Dasar','Instrumental','Praksis','Vital','Material'],a:1,src:W},
+ {s:'twk',q:'Pokok pikiran pertama Pembukaan UUD 1945 (negara melindungi segenap bangsa) mencerminkan sila …',o:['Pertama','Kedua','Ketiga','Keempat','Kelima'],a:2,src:W},
+ {s:'twk',q:'Amandemen pertama UUD 1945 dilakukan pada tahun …',o:['1998','1999','2000','2001','2002'],a:1,src:W},
+ {s:'twk',q:'Presiden memberi amnesti dan abolisi dengan memperhatikan pertimbangan …',o:['MA','MK','DPR','MPR','DPD'],a:2,src:W},
+ {s:'twk',q:'Presiden memberi grasi dan rehabilitasi dengan memperhatikan pertimbangan …',o:['MA','MK','DPR','MPR','KY'],a:0,src:W},
+ {s:'twk',q:'Jumlah hakim konstitusi di Mahkamah Konstitusi adalah …',o:['5 orang','7 orang','9 orang','11 orang','13 orang'],a:2,src:W},
+ {s:'twk',q:'Menurut Pasal 31 UUD 1945, anggaran pendidikan minimal sebesar … dari APBN dan APBD.',o:['10%','15%','20%','25%','30%'],a:2,src:W},
+ {s:'twk',q:'Usul perubahan pasal UUD 1945 dapat diagendakan jika diajukan sekurang-kurangnya oleh … anggota MPR.',o:['1/4','1/3','1/2','2/3','3/4'],a:1,src:W},
+ {s:'twk',q:'Penyerahan urusan pemerintahan dari pemerintah pusat kepada daerah otonom disebut asas …',o:['Dekonsentrasi','Desentralisasi','Tugas pembantuan','Sentralisasi','Delegasi'],a:1,src:W},
+ {s:'twk',q:'Ketua Kongres Pemuda II tahun 1928 adalah …',o:['Moh. Tabrani','Sugondo Djojopuspito','W.R. Supratman','Moh. Yamin','Soetomo'],a:1,src:W},
+ {s:'twk',q:'Sikap hormat-menghormati dan bekerja sama dengan bangsa lain sebagai bagian umat manusia mencerminkan sila …',o:['Pertama','Kedua','Ketiga','Keempat','Kelima'],a:1,src:S},
+ {s:'twk',q:'Lima larangan (madat, madon, minum, main, maling) yang ada sebelum Pancasila disebut …',o:['Tri Prakara','Ma-Lima','Sutasoma','Ekaprasetya','Panca Karsa'],a:1,src:W},
+ {s:'twk',q:'Penetapan Garuda Pancasila sebagai lambang negara diatur dalam UUD 1945 Pasal …',o:['35','36','36A','36B','37'],a:2,src:W},
+ {s:'tkp',q:'Warga datang 10 menit sebelum loket tutup untuk mengurus dokumen yang mendesak, sementara Anda sudah bersiap pulang. Sikap Anda …',o:['Meminta datang lagi besok','Melayani sampai selesai sesuai prosedur','Menyerahkan ke rekan yang masih ada','Melayani sebagian lalu meminta melengkapi besok','Menjelaskan jam layanan sudah hampir habis'],sc:[1,5,2,3,4],src:K},
+ {s:'tkp',q:'Seorang pemohon marah-marah karena antrean lama. Anda …',o:['Membiarkannya sampai tenang','Menegur agar ia sopan','Mendengarkan keluhannya, minta maaf, dan menjelaskan estimasi waktu','Melaporkan ke satpam','Mendahulukan dia agar tidak ribut'],sc:[2,1,5,3,4],src:K},
+ {s:'tkp',q:'Anda ditempatkan di unit baru dan belum mengenal rekan kerja. Langkah Anda …',o:['Menunggu rekan mengajak bicara','Memperkenalkan diri dan aktif bertanya tentang pekerjaan unit','Fokus bekerja sendiri dulu','Mengenal atasan saja','Bergabung jika ada acara kantor'],sc:[1,5,2,3,4],src:K},
+ {s:'tkp',q:'Tim Anda berbeda pendapat tajam soal cara menyelesaikan proyek. Anda …',o:['Mengikuti suara terbanyak tanpa diskusi','Mengajak diskusi untuk mencari solusi terbaik bersama','Menyerahkan keputusan ke atasan','Bertahan dengan pendapat sendiri','Diam agar tidak memperkeruh'],sc:[3,5,4,2,1],src:K},
+ {s:'tkp',q:'Anda bertugas di daerah dengan adat yang sangat berbeda dari daerah asal Anda. Sikap Anda …',o:['Menjaga jarak agar tidak salah langkah','Mempelajari dan menghormati adat setempat dalam bekerja','Mengikuti adat jika diminta','Tetap memakai kebiasaan sendiri','Bergaul dengan sesama pendatang'],sc:[2,5,4,1,3],src:K},
+ {s:'tkp',q:'Rekan kerja dari agama berbeda mengundang Anda ke acara syukuran keluarganya. Anda …',o:['Menolak dengan halus','Datang dan menghormati acaranya sesuai batas keyakinan saya','Mengirim ucapan saja','Datang jika ada rekan lain yang datang','Pura-pura sibuk'],sc:[2,5,4,3,1],src:K},
+ {s:'tkp',q:'Kantor menerapkan aplikasi layanan digital baru yang belum Anda kuasai. Anda …',o:['Tetap memakai cara manual','Mempelajarinya segera dan membantu rekan yang kesulitan','Menunggu pelatihan resmi','Meminta rekan mengerjakan bagian digital','Belajar jika sempat'],sc:[1,5,3,2,4],src:K},
+ {s:'tkp',q:'Anda menerima pesan berantai di grup kantor berisi informasi yang belum jelas sumbernya. Anda …',o:['Meneruskan agar semua waspada','Memeriksa kebenarannya dan mengingatkan grup agar tidak menyebarkan sebelum jelas','Mengabaikannya','Bertanya ke pengirim saja','Menghapus pesannya'],sc:[1,5,3,4,2],src:K},
+ {s:'tkp',q:'Atasan memberi tugas tambahan mendesak saat pekerjaan Anda menumpuk. Anda …',o:['Menolak karena beban sudah banyak','Menyusun prioritas dan menyelesaikan keduanya tepat waktu','Mengerjakan tugas baru dan menunda yang lama','Meminta rekan mengerjakan tugas baru','Mengerjakan semampunya'],sc:[1,5,3,2,4],src:K},
+ {s:'tkp',q:'Anda menemukan kesalahan pada laporan yang sudah terlanjur dikirim ke atasan. Anda …',o:['Diam karena belum ada yang sadar','Segera melapor, memperbaiki, dan mengirim ulang','Memperbaiki jika atasan bertanya','Menyalahkan data dari unit lain','Memperbaiki diam-diam di arsip'],sc:[1,5,3,2,4],src:K},
+ {s:'tkp',q:'Pihak yang berkepentingan menawarkan hadiah agar urusannya didahulukan. Anda …',o:['Menerima tapi tetap sesuai antrean','Menolak tegas dan melayani sesuai prosedur','Menolak lalu menyuruhnya pergi','Menerima jika nilainya kecil','Meminta ia menitipkan ke atasan'],sc:[2,5,4,1,1],src:K},
+ {s:'tkp',q:'Anda mendengar rekan kerja menyebarkan ajaran yang menentang Pancasila di lingkungan kantor. Anda …',o:['Tidak ikut campur','Mengajaknya berdialog dan melaporkan ke pimpinan sesuai prosedur','Menjauhinya','Membicarakannya dengan rekan lain','Menegurnya di depan umum'],sc:[1,5,2,2,3],src:K},
+ {s:'tkp',q:'Di media sosial ada ajakan aksi yang mengadu domba kelompok masyarakat. Anda …',o:['Ikut berkomentar membela kelompok sendiri','Tidak menyebarkan dan melaporkan konten tersebut','Membagikannya untuk diskusi','Mengabaikannya','Menunggu tanggapan resmi'],sc:[1,5,2,3,4],src:K},
+ {s:'tkp',q:'Anda diberi target kerja yang menurut Anda terlalu tinggi. Anda …',o:['Mengeluh ke rekan','Menyusun rencana kerja, berusaha maksimal, dan berkomunikasi dengan atasan jika ada kendala','Bekerja seperti biasa saja','Meminta target diturunkan','Mengerjakan sebagian yang mudah'],sc:[1,5,3,2,4],src:K},
+ {s:'tkp',q:'Hasil kerja Anda dikritik keras di rapat. Anda …',o:['Membela diri saat itu juga','Menerima masukan, mencatat, dan memperbaikinya','Diam tapi kecewa','Meminta pendapat rekan apakah kritik itu adil','Membalas dengan mengkritik pekerjaan pengkritik'],sc:[2,5,3,4,1],src:K}
+];
+BANK.forEach((q,i)=>q.id=i);
+
+const MODES=[
+ {id:'twk',t:'Mini TWK',d:'10 soal Pancasila, UUD, sejarah. 10 menit.',n:{twk:10},m:10,c:'twk'},
+ {id:'tiu',t:'Mini TIU',d:'10 soal verbal dan numerik. 12 menit.',n:{tiu:10},m:12,c:'tiu'},
+ {id:'tkp',t:'Mini TKP',d:'10 soal situasional bernilai 1–5. 8 menit.',n:{tkp:10},m:8,c:'tkp'},
+ {id:'skd',t:'Simulasi SKD',d:'15 TWK, 20 TIU, 15 TKP dengan timer setara CAT (≈55 detik/soal). 46 menit.',n:{twk:15,tiu:20,tkp:15},m:46,c:'all'}
+];
+
+/* ---------- state ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parse=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const TODAY=ymd(new Date());
+const HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const BLN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const fmt=d=>d.getDate()+' '+BLN[d.getMonth()];
+let st={start:TODAY,exam:'',rtime:'19:30',done:{},files:{},vids:{},custom:[],tryouts:[]};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let dbRef=null,saving=false,pending=false;
+const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)};
+function localSave(){try{localStorage.setItem('skd-state',JSON.stringify(st))}catch(e){}}
+async function save(){localSave();if(!dbRef)return;if(saving){pending=true;return}saving=true;try{await dbRef.set({s:JSON.stringify(st),at:Date.now()});note('Progres tersimpan di akun Anda.')}catch(e){note('Tersimpan di perangkat ini saja.')}saving=false;if(pending){pending=false;save()}}
+function note(m){const n=document.getElementById('syncNote');if(n)n.textContent=m}
+try{const l=localStorage.getItem('skd-state');if(l)st=Object.assign(st,JSON.parse(l))}catch(e){}
+
+/* ---------- schedule ---------- */
+const planFor=d=>PLAN[(d.getDay()+6)%7];
+const weekIdx=d=>Math.max(0,Math.floor((parse(ymd(d))-parse(st.start))/864e5/7));
+function tasksFor(d){
+ const p=planFor(d),w=weekIdx(d),f=p.files[w%p.files.length],out=[];
+ out.push({id:'baca',t:'Baca: '+fileById[f],d:p.c==='all'?'Kerjakan 1 paket soal dari file ini':'Fokus topik '+p.t.toLowerCase(),href:D(f)});
+ if(p.v){const v=VIDS.find(x=>x[0]===p.v);out.push({id:'video',t:'Tonton: '+v[2],d:'Al Faiz atau Sang Tutor, lalu centang di tab Video',href:YT('al faiz cpns '+v[3])})}
+ if(p.c==='all')out.push({id:'to',t:'Simulasi SKD 50 soal',d:'Lalu cek pembahasan soal yang salah',to:'skd'});
+ else out.push({id:'to',t:'Mini try out '+NAME[p.c],d:'10 soal, lihat skornya di Progres',to:p.c});
+ if((d.getDay()+6)%7===5)out.push({id:'to2',t:'Bonus: Mini TWK',d:'Pemanasan sebelum try out besok',to:'twk'});
+ return out;
+}
+const dayDone=k=>{const d=st.done[k]||{};return Object.values(d).filter(Boolean).length};
+const studied=k=>dayDone(k)>0;
+
+/* ---------- render ---------- */
+const $=id=>document.getElementById(id);
+function lastScores(n=3){const t=st.tryouts.slice(-12);const r={};for(const s of['twk','tiu','tkp']){const xs=t.filter(x=>x[s]).slice(-n).map(x=>x[s].p);r[s]=xs.length?Math.round(xs.reduce((a,b)=>a+b,0)/xs.length):null}return r}
+function streakDays(){let n=0,d=new Date();if(!studied(ymd(d)))d=addD(d,-1);while(studied(ymd(d))){n++;d=addD(d,-1)}return n}
+function hero(){
+ const sc=lastScores();
+ $('gauges').innerHTML=['twk','tiu','tkp'].map(s=>{const v=sc[s],h=v==null?0:Math.min(100,v/MAX[s]*100),pg=PG[s]/MAX[s]*100;
+  return `<div class="g"><div class="top"><span>${NAME[s]}</span><span>${v==null?'–':v}</span></div><div class="tube"><i style="height:${h}%"></i><em style="bottom:${pg}%">${PG[s]}</em></div><small>${v==null?'Belum ada try out':v>=PG[s]?'Lolos ambang':'Kurang '+(PG[s]-v)+' poin'}</small></div>`}).join('');
+ const ex=st.exam?Math.ceil((parse(st.exam)-parse(TODAY))/864e5):null;
+ $('cd').innerHTML=(ex!=null&&ex>=0?`<div><b>${ex}</b><span>hari menuju SKD</span></div>`:'')+`<div><b>${streakDays()}</b><span>hari beruntun</span></div><div><b>${st.tryouts.length}</b><span>try out selesai</span></div>`;
+}
+function today(){
+ const d=new Date(),p=planFor(d),ts=tasksFor(d),done=st.done[TODAY]||{};
+ $('todayTitle').innerHTML=`${HARI[d.getDay()]}, ${fmt(d)} <span class="tag ${p.c}">${p.c==='all'?'SKD':NAME[p.c]}</span>`;
+ $('todayTasks').innerHTML=`<p class="muted" style="margin:6px 0 4px">${esc(p.t)}</p>`+ts.map(t=>`<div class="task"><input type="checkbox" class="chk" id="tk-${t.id}" data-k="${TODAY}" data-t="${t.id}" ${done[t.id]?'checked':''} aria-label="${esc(t.t)}"><div><div class="t">${t.href?`<a href="${t.href}" target="_blank" rel="noopener">${esc(t.t)}</a>`:esc(t.t)}</div><div class="d">${esc(t.d)}</div>${t.to?`<button class="ghost" style="margin-top:8px" data-start="${t.to}">Mulai</button>`:''}</div></div>`).join('');
+ const n=dayDone(TODAY),[hh,mm]=(st.rtime||'19:30').split(':').map(Number),late=d.getHours()*60+d.getMinutes()>=hh*60+mm;
+ $('banner').innerHTML=n>=ts.length?'<div class="banner done">Target hari ini selesai. Mantap, lanjut besok.</div>':n===0?`<div class="banner">${late?'Sudah lewat jam belajar ('+st.rtime+'). ':''}Belum ada tugas yang dicentang hari ini. Mulai dari yang paling ringan: tonton satu video.</div>`:`<div class="banner">${n} dari ${ts.length} tugas selesai. Sedikit lagi.</div>`;
+ const cells=[];let on=0;const s=addD(d,-27);for(let i=0;i<28;i++){const k=ymd(addD(s,i));if(studied(k))on++;cells.push(`<i class="${studied(k)?'on':''} ${k===TODAY?'today':''}" title="${k}"></i>`)}
+ $('streak').innerHTML=cells.join('');
+ $('quick').innerHTML=`<div><b>${on}/28</b><span>hari belajar</span></div><div><b>${Object.values(st.vids).filter(Boolean).length}/${VIDS.length+st.custom.length}</b><span>video ditonton</span></div><div><b>${Object.values(st.files).filter(Boolean).length}/${Object.keys(fileById).length}</b><span>file dibaca</span></div>`;
+ $('exam').value=st.exam||'';$('rtime').value=st.rtime||'19:30';
+}
+let wkOff=0;
+function week(){
+ const now=new Date(),mon=addD(now,-((now.getDay()+6)%7)+wkOff*7);
+ $('wkLabel').textContent=fmt(mon)+' – '+fmt(addD(mon,6));
+ $('week').innerHTML=[0,1,2,3,4,5,6].map(i=>{const d=addD(mon,i),k=ymd(d),p=planFor(d),ts=tasksFor(d),n=dayDone(k);
+  return `<div class="day ${k===TODAY?'today':''}"><div class="dt">${HARI[d.getDay()]}<small>${fmt(d)}</small></div><div><span class="tag ${p.c}">${p.c==='all'?'SKD':NAME[p.c]}</span> <b>${esc(p.t)}</b><div class="muted">${ts.map(t=>esc(t.t)).join(' · ')}</div><div class="prog"><i style="width:${Math.min(100,n/ts.length*100)}%"></i></div></div><div class="act muted" style="white-space:nowrap">${n}/${ts.length} tugas</div></div>`}).join('');
+}
+function materi(){
+ $('files').innerHTML=FILES.map(g=>`<div class="panel"><h3><span class="tag ${g.c}">${g.c==='all'?'Soal':g.c==='tkp'?'SKD':NAME[g.c]}</span> ${esc(g.g)}</h3>${g.items.map(([id,t])=>`<div class="file"><input type="checkbox" class="chk" data-f="${id}" ${st.files[id]?'checked':''} aria-label="Sudah dibaca: ${esc(t)}"><a href="${D(id)}" target="_blank" rel="noopener">${esc(t)}</a></div>`).join('')}</div>`).join('')+
+ `<div class="panel"><h3>Folder lengkap</h3>${FOLDERS.map(([id,t])=>`<div class="file"><a href="${F+id}" target="_blank" rel="noopener">${esc(t)}</a></div>`).join('')}</div>`;
+ $('sum').innerHTML=SUM.map(([c,t,xs],i)=>`<details ${i===0?'open':''}><summary><span class="tag ${c}">${NAME[c]}</span>${esc(t)}</summary><ul>${xs.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>`).join('');
+}
+function videos(){
+ const all=VIDS.map(([id,c,t,q])=>({id,c,t,q})).concat(st.custom.map(x=>({id:x.id,c:x.c,t:x.t,url:x.url,own:1})));
+ $('vids').innerHTML=['twk','tiu','tkp'].map(c=>{const xs=all.filter(v=>v.c===c),dn=xs.filter(v=>st.vids[v.id]).length;
+  return `<details open><summary><span class="tag ${c}">${NAME[c]}</span> ${dn}/${xs.length} ditonton</summary>${xs.map(v=>`<div class="vid"><input type="checkbox" class="chk" data-v="${v.id}" ${st.vids[v.id]?'checked':''} aria-label="Sudah ditonton: ${esc(v.t)}"><div><div style="font-weight:600">${esc(v.t)}</div><div class="links">${v.own?`<a href="${esc(v.url)}" target="_blank" rel="noopener">Buka video</a><a href="#video" data-del="${v.id}">Hapus</a>`:`<a href="${YT('al faiz cpns '+v.q)}" target="_blank" rel="noopener">Al Faiz</a><a href="${YT('sang tutor cpns '+v.q)}" target="_blank" rel="noopener">Sang Tutor</a>`}</div></div></div>`).join('')}</details>`}).join('');
+}
+function progres(){
+ const sc=lastScores(),tot=Object.keys(st.done).filter(studied).length;
+ const best=st.tryouts.reduce((m,t)=>Math.max(m,t.full?t.total:0),0);
+ $('pStats').innerHTML=`<div><b>${tot}</b><span>total hari belajar</span></div><div><b>${streakDays()}</b><span>hari beruntun</span></div><div><b>${st.tryouts.length}</b><span>try out</span></div><div><b>${best||'–'}</b><span>skor simulasi terbaik</span></div>`;
+ const cov=['twk','tiu','tkp'].map(c=>{const fs=FILES.filter(g=>g.c===c).flatMap(g=>g.items.map(i=>i[0])),vs=VIDS.filter(v=>v[1]===c).map(v=>v[0]).concat(st.custom.filter(x=>x.c===c).map(x=>x.id));
+  const tt=fs.length+vs.length,dn=fs.filter(f=>st.files[f]).length+vs.filter(v=>st.vids[v]).length;return {c,pct:tt?Math.round(dn/tt*100):0}});
+ $('cover').innerHTML=cov.map(x=>`<div class="br"><b>${NAME[x.c]}</b><div class="tr"><i style="width:${x.pct}%;background:var(--${x.c})"></i></div><span class="v">${x.pct}% materi</span></div>`).join('')+
+  ['twk','tiu','tkp'].map(s=>`<div class="br"><b>${NAME[s]}</b><div class="tr"><i style="width:${sc[s]==null?0:Math.min(100,sc[s]/MAX[s]*100)}%;background:var(--${s})"></i><em style="left:${PG[s]/MAX[s]*100}%"></em></div><span class="v">${sc[s]==null?'–':sc[s]} / ${PG[s]}</span></div>`).join('')+
+  '<p class="muted">Tiga baris atas: materi yang sudah dibaca dan ditonton. Tiga baris bawah: rata-rata 3 try out terakhir; garis putus-putus = ambang batas.</p>';
+ const cells=[],s=addD(new Date(),-55);for(let i=0;i<56;i++){const k=ymd(addD(s,i));cells.push(`<i class="${studied(k)?'on':''}" title="${k}"></i>`)}$('heat').innerHTML=cells.join('');
+ const rows=st.tryouts.slice().reverse().slice(0,10);
+ $('histT').innerHTML=rows.length?`<tr><th>Tanggal</th><th>Mode</th><th class="n">TWK</th><th class="n">TIU</th><th class="n">TKP</th><th class="n">Total</th></tr>`+rows.map(t=>`<tr><td>${fmt(parse(t.date))}</td><td>${esc(t.mode)}</td>${['twk','tiu','tkp'].map(s=>`<td class="n">${t[s]?t[s].p:'–'}</td>`).join('')}<td class="n">${t.full?t.total:'–'}</td></tr>`).join(''):'<tr><td class="muted">Belum ada try out. Mulai dari Mini TIU.</td></tr>';
+ drawHist();
+}
+const hs=$('hist');
+function drawHist(){
+ const W=hs.clientWidth,H=hs.clientHeight;if(!W)return;
+ const xs=st.tryouts.map((t,i)=>{const ss=['twk','tiu','tkp'].filter(s=>t[s]);const got=ss.reduce((a,s)=>a+t[s].p,0),mx=ss.reduce((a,s)=>a+MAX[s],0);return {i,v:t.full?t.total:Math.round(got/mx*550)}});
+ const L=36,R=14,Tp=14,B=24,pgT=PG.twk+PG.tiu+PG.tkp,y=v=>Tp+(1-v/550)*(H-Tp-B);
+ let g=[0,150,450,550].map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}</text>`).join('');
+ g+=`<line x1="${L}" x2="${W-R}" y1="${y(pgT)}" y2="${y(pgT)}" stroke="var(--ink)" stroke-dasharray="5 4"/><text x="${W-R}" y="${y(pgT)-6}" text-anchor="end">ambang total ${pgT}</text>`;
+ if(!xs.length){hs.innerHTML=g+`<text x="${(L+W)/2}" y="${H/2+30}" text-anchor="middle">Grafik muncul setelah try out pertama</text>`;return}
+ const x=i=>xs.length===1?(L+W-R)/2:L+i/(xs.length-1)*(W-L-R);
+ g+=`<polyline fill="none" stroke="var(--red)" stroke-width="3" points="${xs.map(p=>x(p.i)+','+y(p.v)).join(' ')}"/>`+xs.map(p=>`<circle cx="${x(p.i)}" cy="${y(p.v)}" r="5" fill="var(--red)"/>`).join('');
+ const last=xs[xs.length-1];g+=`<text x="${Math.max(L+20,Math.min(x(last.i),W-R-20))}" y="${y(last.v)-10}" text-anchor="middle" style="fill:var(--ink);font-weight:700">${last.v}</text>`;
+ hs.innerHTML=g;
+}
+const histRO=new ResizeObserver(drawHist);histRO.observe(hs);
+$('modes').innerHTML=MODES.map(m=>`<div class="mode"><div><span class="tag ${m.c}">${m.c==='all'?'SKD':NAME[m.c]}</span></div><h3>${m.t}</h3><p>${m.d}</p><button class="${m.id==='skd'?'red':''}" data-start="${m.id}">Mulai</button></div>`).join('');
+
+/* ---------- try out engine ---------- */
+let run=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function startTO(id){
+ if(run)clearInterval(run.tk);
+ const m=MODES.find(x=>x.id===id);const qs=[];
+ for(const s of['twk','tiu','tkp'])if(m.n[s])qs.push(...shuffle(BANK.filter(q=>q.s===s)).slice(0,m.n[s]));
+ run={m,qs,ans:{},cur:0,end:Date.now()+m.m*60e3};
+ if(location.hash!=='#tryout')location.hash='tryout';show();$('toHome').hidden=true;$('toRes').hidden=true;$('toRun').hidden=false;drawQ();
+ run.tk=setInterval(tick,1000);window.scrollTo(0,0);
+}
+function tick(){if(!run)return;const s=Math.max(0,Math.round((run.end-Date.now())/1000));const el=$('tm');if(el)el.textContent=pad(Math.floor(s/60))+':'+pad(s%60);if(s<=0)finish()}
+function drawQ(){
+ const q=run.qs[run.cur],a=run.ans[run.cur];
+ $('toRun').innerHTML=`<div class="cat"><div class="qbox"><div class="qhead"><span><span class="tag ${q.s}">${NAME[q.s]}</span> Soal ${run.cur+1} dari ${run.qs.length}</span><span class="timer" id="tm">--:--</span></div><div class="qtext">${esc(q.q)}</div>${q.o.map((o,i)=>`<button class="opt ${a===i?'sel':''}" data-opt="${i}"><b>${'ABCDE'[i]}</b><span>${esc(o)}</span></button>`).join('')}<div class="row" style="margin-top:12px;justify-content:space-between"><button class="ghost" data-nav="-1" ${run.cur===0?'disabled':''}>‹ Sebelumnya</button><button class="ghost" data-nav="1" ${run.cur===run.qs.length-1?'disabled':''}>Berikutnya ›</button></div></div>
+ <div class="side panel"><b>Nomor soal</b><div class="nums" style="margin:10px 0">${run.qs.map((_,i)=>`<button class="${run.ans[i]!=null?'ans':''} ${i===run.cur?'cur':''}" data-go="${i}">${i+1}</button>`).join('')}</div><p class="muted">${Object.keys(run.ans).length} dari ${run.qs.length} terjawab</p><button class="red" id="finish" style="width:100%;justify-content:center">Selesai & lihat hasil</button><button class="ghost" id="quit" style="width:100%;justify-content:center;margin-top:8px">Batalkan</button></div></div>`;
+ tick();
+}
+function finish(){
+ if(!run)return;clearInterval(run.tk);
+ const rn=run;run=null;
+ const r={date:TODAY,mode:rn.m.t,full:rn.m.id==='skd'};let total=0;
+ for(const s of['twk','tiu','tkp']){const idx=rn.qs.map((q,i)=>i).filter(i=>rn.qs[i].s===s);if(!idx.length)continue;
+  let raw=0,c=0;for(const i of idx){const q=rn.qs[i],a=rn.ans[i];if(a==null)continue;if(s==='tkp')raw+=q.sc[a];else if(a===q.a){raw+=5;c++}}
+  const max=idx.length*5,p=Math.round(raw/max*MAX[s]);r[s]={raw,max,c,n:idx.length,p};total+=p}
+ r.total=total;st.tryouts.push(r);
+ const d=st.done[TODAY]||(st.done[TODAY]={});for(const t of tasksFor(new Date()))if(t.to===rn.m.id)d[t.id]=true;
+ save();renderAll();showRes(r,rn);
+}
+function showRes(r,rn){
+ $('toRun').hidden=true;$('toRes').hidden=false;
+ const parts=['twk','tiu','tkp'].filter(s=>r[s]),pass=parts.every(s=>r[s].p>=PG[s]);
+ const wrong=rn.qs.map((q,i)=>({q,a:rn.ans[i]})).filter(x=>x.q.s==='tkp'?(x.a==null||x.q.sc[x.a]<5):x.a!==x.q.a);
+ $('toRes').innerHTML=`<h2>${r.full?(pass?'Lolos semua ambang batas':'Belum lolos ambang batas'):'Hasil '+esc(r.mode)}</h2>
+ <p class="muted">Skor diproyeksikan ke skala SKD. ${r.full?'Total '+r.total+' dari 550.':''}</p>
+ <div class="panel bars">${parts.map(s=>`<div class="br"><b>${NAME[s]}</b><div class="tr"><i style="width:${Math.min(100,r[s].p/MAX[s]*100)}%;background:var(--${s})"></i><em style="left:${PG[s]/MAX[s]*100}%"></em></div><span class="v">${r[s].p} / ${PG[s]} ${r[s].p>=PG[s]?'✓':'✗'}</span></div><p class="muted" style="margin:-4px 0 6px">${s==='tkp'?'Rata-rata '+(r[s].raw/r[s].n).toFixed(1)+' poin per soal':r[s].c+' benar dari '+r[s].n+' soal'}</p>`).join('')}</div>
+ <div class="row" style="margin:16px 0"><button class="red" data-start="${rn.m.id}">Ulangi</button><button class="ghost" id="back">Kembali ke menu</button></div>
+ <h3>Pembahasan (${wrong.length} soal perlu diperhatikan)</h3>${wrong.map(({q,a})=>`<div class="rev"><div style="font-weight:600">${esc(q.q)}</div>${q.s==='tkp'?`<div>Jawaban Anda: ${a==null?'<span class="no">kosong (0)</span>':esc(q.o[a])+' <span class="no">('+q.sc[a]+' poin)</span>'}</div><div class="ok">Nilai 5: ${esc(q.o[q.sc.indexOf(5)])}</div>`:`<div>Jawaban Anda: <span class="no">${a==null?'kosong':esc(q.o[a])}</span></div><div class="ok">Benar: ${esc(q.o[q.a])}</div>`}<div class="muted">Sumber: ${esc(q.src)}</div></div>`).join('')||'<p>Semua benar. Luar biasa.</p>'}`;
+ window.scrollTo(0,0);
+}
+
+/* ---------- routing & events ---------- */
+const VIEWS=['hari-ini','jadwal','materi','tryout','video','progres'];
+function show(){const h=location.hash.slice(1);const v=VIEWS.includes(h)?h:'hari-ini';for(const x of VIEWS)$('v-'+x).classList.toggle('on',x===v);for(const a of $('tabs').children)a.classList.toggle('on',a.getAttribute('href')==='#'+v);if(v==='progres')requestAnimationFrame(drawHist)}
+function renderAll(){hero();today();week();materi();videos();progres()}
+window.addEventListener('hashchange',show);
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.k){const d=st.done[t.dataset.k]||(st.done[t.dataset.k]={});d[t.dataset.t]=t.checked;save();renderAll();if(t.checked)toast('Tercatat. Terus konsisten!')}
+ else if(t.dataset.f){st.files[t.dataset.f]=t.checked;save();renderAll()}
+ else if(t.dataset.v){st.vids[t.dataset.v]=t.checked;const p=planFor(new Date());if(t.checked&&p.v===t.dataset.v){(st.done[TODAY]||(st.done[TODAY]={})).video=true}save();renderAll()}
+ else if(t.id==='exam'){st.exam=t.value;save();hero()}
+ else if(t.id==='rtime'){st.rtime=t.value;save();today()}
+});
+document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b)return;
+ if(b.dataset.start){startTO(b.dataset.start)}
+ else if(b.dataset.opt!=null&&run){run.ans[run.cur]=+b.dataset.opt;if(run.cur<run.qs.length-1)run.cur++;drawQ()}
+ else if(b.dataset.nav&&run){run.cur+=+b.dataset.nav;drawQ()}
+ else if(b.dataset.go!=null&&run){run.cur=+b.dataset.go;drawQ()}
+ else if(b.id==='finish'&&run){const left=run.qs.length-Object.keys(run.ans).length;if(left&&!b.dataset.sure){b.dataset.sure=1;b.textContent=left+' soal kosong. Ketuk lagi untuk selesai';return}finish()}
+ else if(b.id==='quit'&&run){clearInterval(run.tk);run=null;$('toRun').hidden=true;$('toHome').hidden=false}
+ else if(b.id==='back'){$('toRes').hidden=true;$('toHome').hidden=false}
+ else if(b.id==='wkPrev'){wkOff--;week()}else if(b.id==='wkNext'){wkOff++;week()}
+ else if(b.id==='vAdd'){const t=$('vT').value.trim(),u=$('vU').value.trim();if(!t||!/^https?:\/\//.test(u)){toast('Isi judul dan link yang diawali https://');return}st.custom.push({id:'c'+Date.now(),t,url:u,c:$('vC').value});$('vT').value='';$('vU').value='';save();renderAll();toast('Video ditambahkan')}
+ else if(b.dataset.del){e.preventDefault();st.custom=st.custom.filter(x=>x.id!==b.dataset.del);delete st.vids[b.dataset.del];save();renderAll()}
+});
+
+show();renderAll();
+
+/* ---------- account sync ---------- */
+(async()=>{
+ const tmr=setTimeout(()=>note('Tersimpan di perangkat ini.'),10000);
+ try{
+  const use=window.claude&&window.claude.use;
+  if(!use){clearTimeout(tmr);note('Tersimpan di perangkat ini.');return}
+  const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+  if(!db||!user){clearTimeout(tmr);note('Tersimpan di perangkat ini.');return}
+  const id=await user.id();dbRef=db.doc('data/users/'+id+'/state');
+  const snap=await dbRef.get();clearTimeout(tmr);
+  const data=snap&&(typeof snap.data==='function'?snap.data():(snap.data!==undefined?snap.data:snap));
+  if(data&&data.s){const remote=JSON.parse(data.s);
+   const score=o=>(o.tryouts||[]).length+Object.keys(o.done||{}).length;
+   if(score(remote)>=score(st))st=Object.assign(st,remote);localSave();renderAll();save()}
+  else save();
+  note('Progres tersimpan di akun Anda dan ikut di semua perangkat.');
+ }catch(e){clearTimeout(tmr);note('Tersimpan di perangkat ini.')}
+})();
+}
+</script>
+</body>
+</html>
